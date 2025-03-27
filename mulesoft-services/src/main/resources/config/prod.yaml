@@ -1,0 +1,23 @@
+application:
+ name: "p-ai-services"
+api:
+ name: "p-ai-services"
+ id: "20036227"
+ version: "v1"
+ http:
+  listener:
+   path: "/api/${api.version}/*"
+   host: "0.0.0.0"
+   port: "8091"
+   propagateError: "true"
+
+        
+awsApis:
+  aws-recommended-api:
+    connection:
+      host: "kwlt3y0ac3.execute-api.us-east-1.amazonaws.com"
+      port: "443"
+      basePath: "/"
+      response-timeout: "30000"
+
+ 

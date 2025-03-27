@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:java="http://www.mulesoft.org/schema/mule/java"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/java http://www.mulesoft.org/schema/mule/java/current/mule-java.xsd">
+
+	<flow name="p-ai-services-main"
+		doc:id="bff9e393-02ed-43d2-9504-7a2fd6e71cfd">
+		<http:listener doc:name="Listener"
+			doc:id="3752feee-a10b-4933-b348-9a7054cd11bf"
+			path="${api.http.listener.path}" config-ref="HTTP_Listener_config">
+			<http:response
+				statusCode="#[vars.httpStatus default 200]">
+				<http:headers><![CDATA[#[output applicaton/java
+---
+{
+	"eTag" : vars.hash
+}]]]></http:headers>
+
+			</http:response>
+			<http:error-response statusCode="#[vars.httpStatus default 500]" >
+				<http:body ><![CDATA[#[payload]]]></http:body>
+			</http:error-response>
+		</http:listener>
+		<flow-ref doc:name="mule-common-request-initiation-subflow"
+			doc:id="eca04e31-58fd-4d85-b21d-cd194fe3e90f"
+			name="mule-common-request-initiation-subflow" />
+		<apikit:router doc:name="APIkit Router"
+			doc:id="14c6d04c-0c0f-4fd2-96a0-c6a18492bbd3"
+			config-ref="p-ai-services-api-router-config" />
+		<flow-ref doc:name="mule-common-response-finalize-subflow"
+			doc:id="6d9e169e-1c20-4548-93c6-76346eed768d"
+			name="mule-common-response-finalize-subflow" />
+	</flow>
+	<flow name="get:\recommended-hours:p-ai-services-api-router-config" doc:id="5cf157c9-928d-4339-8831-491cf4e7928d" initialState="${flows.invoices.initialState}" >
+		<set-variable value="#[correlationId]" doc:name="Set transactionId" doc:id="988d7f37-192d-4885-8f88-5450b0f96d8a" variableName="transactionId" />
+		<set-variable value='#[attributes.queryParams.storeId as String default ""]' doc:name="Set storeId" doc:id="6ec7b1d2-24df-4bb9-afc3-9f684342790a" variableName="storeId"/>
+		<ee:transform doc:name="Business Attributes" doc:id="18ee81e6-6488-4350-afab-4144c4cce20e" >
+			<ee:message />
+			<ee:variables >
+				<ee:set-variable variableName="businessAttributes" ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"flow": "HTTP GET recommended hours flow"
+}]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="IMPLEMENTATION:get-recommended-hours" doc:id="4b14986b-0a26-4fa7-b641-40d382a7a05f" name="IMPLEMENTATION:get-recommended-hours"/>
+	</flow>
+	<flow name="post:\recommended-items:p-ai-services-api-router-config" doc:id="e49d88b5-6834-47fa-b222-ad4de9fc4db3" initialState="${flows.invoices.initialState}" >
+		<set-variable value="#[correlationId]" doc:name="Set transactionId" doc:id="b0a7dd63-92fb-4994-825e-b54f2c565255" variableName="transactionId" />
+		<ee:transform doc:name="Business Attributes" doc:id="f134e175-8450-4b5a-b398-e586c54c313c" >
+			<ee:message />
+			<ee:variables >
+				<ee:set-variable variableName="businessAttributes" ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"flow": "HTTP POST recommended items flow"
+}]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="IMPLEMENTATION:post-recommended-items" doc:id="11c019c8-22f8-49cf-affc-afc5f44f16e0" name="IMPLEMENTATION:post-recommended-items"/>
+	</flow>
+</mule>

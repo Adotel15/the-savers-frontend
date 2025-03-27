@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:aws-sm-properties-provider="http://www.mulesoft.org/schema/mule/aws-sm-properties-provider"
+	xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
+	xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties" xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway"
+	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd 
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
+http://www.mulesoft.org/schema/mule/aws-sm-properties-provider http://www.mulesoft.org/schema/mule/aws-sm-properties-provider/current/mule-aws-sm-properties-provider.xsd">
+	
+	<apikit:config outboundHeadersMapName="outboundHeadersMapName" httpStatusVarName="httpStatus" doc:name="Router" doc:id="4931280a-bc98-48e5-a4ac-24b8405c1cb7" name="p-ai-services-api-router-config" queryParamsStrictValidation="true" api="api/openapi.yaml"/>
+	<import doc:name="Import" doc:id="499d01f0-83a0-441f-b5a5-d5e6bc6fa1b7" file="common-global.xml" doc:description="common-global"/>
+	<import doc:name="Import" doc:id="499d01f0-83a0-441f-b5a5-d5e6bc6fa1b7" file="common-functionality.xml" doc:description="common-functionality"/>
+	<import doc:name="Import" doc:id="243fffbe-ff8d-4c7a-999c-831887f17f73" file="common-error-handler.xml" doc:description="common-error-handler"/>
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="619d8ee3-30df-40b3-b275-1dc7b3a33bb5" >
+		<http:listener-connection port="${api.http.listener.port}" host="${api.http.listener.host}"/>
+	</http:listener-config>
+	<api-gateway:autodiscovery apiId="${api.id}" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="b410e343-4929-47f8-ad1b-9a8ddf958559" flowRef="p-ai-services-main" />
+	<http:request-config name="HTTPS_cloudhub_s_s4_config" doc:name="HTTP Request configuration" doc:id="c245b80c-791a-425e-8377-fe621bcb0843" responseTimeout="${muleApis.s-s4.connection.cloudhub.response-timeout}" basePath="${muleApis.s-s4.connection.cloudhub.basePath}">
+    	<http:request-connection host="${muleApis.s-s4.connection.cloudhub.host}" port="${muleApis.s-s4.connection.cloudhub.port}" protocol="HTTPS">
+        	<tls:context >
+            	<tls:trust-store insecure="true" />
+        	</tls:context>
+        	<http:authentication >
+				<http:basic-authentication username="${aws-secrets::p-ai-services:api.clientId}" password="${aws-secrets::p-ai-services:api.clientSecret}" />
+			</http:authentication>
+    	</http:request-connection>
+	</http:request-config>
+	<http:request-config name="HTTP_rtf_s_s4_config" doc:name="HTTP Request configuration" doc:id="58d623a2-0a00-407f-bab8-69a43720ae1f" responseTimeout="${muleApis.s-s4.connection.rtf.response-timeout}" basePath="${muleApis.s-s4.connection.rtf.basePath}">
+    	<http:request-connection host="${muleApis.s-s4.connection.rtf.host}" port="${muleApis.s-s4.connection.rtf.port}" >
+			<http:authentication >
+				<http:basic-authentication username="${aws-secrets::p-ai-services:api.clientId}" password="${aws-secrets::p-ai-services:api.clientSecret}" />
+			</http:authentication>
+		</http:request-connection>
+	</http:request-config>
+	<http:request-config name="HTTP_AWS_API_Gateway_config" doc:name="HTTP Request configuration" doc:id="b5eff361-911a-474f-b4a1-4b24fdfedd08" responseTimeout="${awsApis.aws-recommended-api.connection.response-timeout}" basePath="${awsApis.aws-recommended-api.connection.basePath}">
+    	<http:request-connection host="${awsApis.aws-recommended-api.connection.host}" port="${awsApis.aws-recommended-api.connection.port}" protocol="HTTPS">
+		</http:request-connection>
+	</http:request-config>
+	<aws-sm-properties-provider:config name="Aws_sm_properties_provider_Config" doc:name="Aws-sm-properties-provider Config" doc:id="da7c39d3-9078-440f-8eca-59675941c307" region="eu-west-1" environment="${mule.env}" accessKey="${secretsManager.accessKey}" secretKey="${secretsManager.secretKey}"/>
+</mule>

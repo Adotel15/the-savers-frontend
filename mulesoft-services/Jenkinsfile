@@ -1,0 +1,26 @@
+@Library('mango-jenkins-shared-library@feature/mulePipeline')_
+
+mulePipeline {
+
+ gitRepository = 'p-ia-services'
+ projectName = 'p-ai-services'
+ projectGroup = 'ES'
+ muleVersion='4.4.0'
+ 
+ rtfDeploymentUat = 'true'
+ rtfDeploymentProd = 'true' 
+ exchangeDeployment = 'true'
+ 
+ rtfTargetUat = 'EKS-NON-PRODUCTION'
+ rtfReplicasUat = '1'
+ rtfCpuReservedUat = '20m'
+ rtfCpuLimitUat = '200m'
+ rtfMemoryReservedUat = '1000Mi'
+ 
+ rtfTargetProd = 'EKS-PRODUCTION'
+ rtfReplicasProd = '1'
+ rtfCpuReservedProd = '20m'
+ rtfCpuLimitProd = '200m'
+ rtfMemoryReservedProd = '1300Mi'
+
+}
