@@ -22,7 +22,6 @@ export const getRecommendedHours = async (storeId) => {
 
 export const getRecommendations = async (selectedProducts, purchaseHistory) => {
   try {
-    // Make the recommendations request with the token
     const response = await fetch(`${BASE_URL}/recommended-items`, {
       method: 'POST',
       headers: {

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Container } from '@mui/material';
-import StoreSelector from '../components/StoreSelector';
-import HoursList from '../components/HoursList';
+import StoreSelector from './StoreSelector';
+import HoursList from './HoursList';
 import { getRecommendedHours } from '../services/api';
 
 const HoursRecommendation = () => {
