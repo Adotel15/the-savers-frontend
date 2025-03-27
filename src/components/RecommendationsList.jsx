@@ -36,21 +36,37 @@ export const RecommendationsList = ({ recommendations, loading, error }) => {
       <Typography variant="h5" gutterBottom>
         Productos Recomendados
       </Typography>
-      <Grid container spacing={3}>
+      <Grid container spacing={2} columns={12}>
         {recommendations.body.recommendations[0].map((product, index) => (
-          <Grid item xs={12} sm={6} md={4} key={index}>
-            <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-              <CardMedia
-                component="img"
-                image={product.images.main}
-                alt={product.name}
-                sx={{ 
-                  height: 300,
-                  objectFit: 'cover'
-                }}
-              />
-              <CardContent sx={{ flexGrow: 1 }}>
-                <Typography variant="h6" align="center" gutterBottom>
+          <Grid item xs={6} key={index}>
+            <Card>
+              <Box sx={{ position: 'relative' }}>
+                <CardMedia
+                  component="img"
+                  image={product.images.main}
+                  alt={product.name}
+                  sx={{ 
+                    width: '100%',
+                    height: { xs: 200, sm: 280 },
+                    objectFit: 'cover'
+                  }}
+                />
+              </Box>
+              <CardContent>
+                <Typography 
+                  variant="body1" 
+                  align="left"
+                  sx={{
+                    fontSize: { xs: '0.875rem', sm: '1rem' },
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    display: '-webkit-box',
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: 'vertical',
+                    lineHeight: 1.2,
+                    minHeight: '2.4em'
+                  }}
+                >
                   {product.name}
                 </Typography>
               </CardContent>
