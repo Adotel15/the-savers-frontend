@@ -17,7 +17,7 @@ export const ProductSelector = ({ onProductsSubmit }) => {
   const [historyId, setHistoryId] = useState('');
 
   const handleAddProduct = () => {
-    if (productId && selectedProducts.length < 1) {
+    if (productId) {
       setSelectedProducts([...selectedProducts, productId]);
       setProductId('');
     }
@@ -31,7 +31,10 @@ export const ProductSelector = ({ onProductsSubmit }) => {
   };
 
   const handleSubmit = () => {
-    onProductsSubmit(selectedProducts, purchaseHistory);
+    // Enviar arrays vacíos si no hay productos o histórico seleccionados
+    const products = selectedProducts.length > 0 ? selectedProducts : [];
+    const history = purchaseHistory.length > 0 ? purchaseHistory : [];
+    onProductsSubmit(products, history);
   };
 
   const removeProduct = (index) => {
@@ -46,7 +49,7 @@ export const ProductSelector = ({ onProductsSubmit }) => {
     <Box sx={{ maxWidth: 600, mx: 'auto', p: 3 }}>
       <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
         <Typography variant="h6" gutterBottom>
-          Seleccionar Productos (3)
+          Seleccionar Productos
         </Typography>
         <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
           <TextField
@@ -54,12 +57,11 @@ export const ProductSelector = ({ onProductsSubmit }) => {
             label="ID del Producto"
             value={productId}
             onChange={(e) => setProductId(e.target.value)}
-            disabled={selectedProducts.length > 1}
           />
           <Button
             variant="contained"
             onClick={handleAddProduct}
-            disabled={!productId || selectedProducts.length > 1}
+            disabled={!productId}
           >
             Añadir
           </Button>

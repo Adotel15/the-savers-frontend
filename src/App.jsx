@@ -26,6 +26,8 @@ function App() {
   const handleProductsSubmit = async (selectedProducts, purchaseHistory) => {
     setLoading(true);
     setError(null);
+
+    console.log('hello');
     try {
       const data = await getRecommendations(selectedProducts, purchaseHistory);
       setRecommendations(data);
@@ -54,9 +56,9 @@ function App() {
             <Tab label="Horas" />
           </Tabs>
         </Box>
-        
+
         <TabPanel value={tabValue} index={0}>
-          <ProductSelector onSubmit={handleProductsSubmit} />
+          <ProductSelector onProductsSubmit={handleProductsSubmit} />
           <RecommendationsList
             recommendations={recommendations}
             loading={loading}
