@@ -32,7 +32,7 @@ const StoreSelector = ({ onSubmit }) => {
           sx={{ mt: 2 }}
           disabled={!storeId}
         >
-          Obtener Recomendaciones
+          Obtener mejor hora de recogida
         </Button>
       </Box>
     </Paper>

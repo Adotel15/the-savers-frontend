@@ -123,7 +123,7 @@ export const ProductSelector = ({ onProductsSubmit }) => {
         fullWidth
         onClick={handleSubmit}
       >
-        Obtener Recomendaciones
+        Obtener match de productos
       </Button>
     </Box>
   );

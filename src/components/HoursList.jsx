@@ -56,25 +56,25 @@ const HoursList = ({ hours, loading, error }) => {
   return (
     <Paper elevation={3} sx={{ p: 3, maxWidth: 800, mx: 'auto', mt: 4 }}>
       <Typography variant="h6" gutterBottom>
-        Horas Disponibles
+        Horas Recomendadas
       </Typography>
       <Grid container spacing={2} sx={{ mt: 2 }}>
-        {hours.body.map((timeSlot) => (
+        {hours.body
+          .filter(timeSlot => timeSlot.recommended)
+          .map((timeSlot) => (
           <Grid item xs={6} sm={4} md={3} key={timeSlot.hour}>
             <Card 
               sx={{ 
-                cursor: timeSlot.recommended ? 'pointer' : 'not-allowed',
-                bgcolor: selectedHour === timeSlot.hour ? '#e3f2fd' : 
-                        timeSlot.recommended ? 'white' : '#f5f5f5',
-                opacity: timeSlot.recommended ? 1 : 0.7
+                cursor: 'pointer',
+                bgcolor: selectedHour === timeSlot.hour ? '#e3f2fd' : 'white',
               }}
-              onClick={() => timeSlot.recommended && handleHourSelect(timeSlot.hour)}
+              onClick={() => handleHourSelect(timeSlot.hour)}
             >
               <CardContent>
                 <Typography 
                   variant="h6" 
                   align="center"
-                  color={timeSlot.recommended ? 'primary' : 'text.secondary'}
+                  color="primary"
                 >
                   {timeSlot.hour}
                 </Typography>
@@ -82,9 +82,9 @@ const HoursList = ({ hours, loading, error }) => {
                   variant="caption" 
                   display="block" 
                   align="center"
-                  color={timeSlot.recommended ? 'success.main' : 'text.secondary'}
+                  color="success.main"
                 >
-                  {timeSlot.recommended ? 'Recomendada' : 'No recomendada'}
+                  Hora Recomendada
                 </Typography>
               </CardContent>
             </Card>
