@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { 
-  Paper, 
-  Typography, 
-  Box, 
-  CircularProgress, 
+import {
+  Paper,
+  Typography,
+  Box,
+  CircularProgress,
   Grid,
   Card,
   CardContent,
@@ -58,29 +58,29 @@ const HoursList = ({ hours, loading, error }) => {
       <Typography variant="h6" gutterBottom>
         Horas Recomendadas
       </Typography>
-      <Grid container spacing={2} sx={{ mt: 2 }}>
+      <Grid container justifyContent="center" spacing={2} sx={{ mt: 2 }}>
         {hours.body
           .filter(timeSlot => timeSlot.recommended)
           .map((timeSlot) => (
           <Grid item xs={6} sm={4} md={3} key={timeSlot.hour}>
-            <Card 
-              sx={{ 
+            <Card
+              sx={{
                 cursor: 'pointer',
                 bgcolor: selectedHour === timeSlot.hour ? '#e3f2fd' : 'white',
               }}
               onClick={() => handleHourSelect(timeSlot.hour)}
             >
               <CardContent>
-                <Typography 
-                  variant="h6" 
+                <Typography
+                  variant="h6"
                   align="center"
                   color="primary"
                 >
                   {timeSlot.hour}
                 </Typography>
-                <Typography 
-                  variant="caption" 
-                  display="block" 
+                <Typography
+                  variant="caption"
+                  display="block"
                   align="center"
                   color="success.main"
                 >
@@ -91,10 +91,10 @@ const HoursList = ({ hours, loading, error }) => {
           </Grid>
         ))}
       </Grid>
-      
+
       <Box sx={{ mt: 3, display: 'flex', justifyContent: 'center' }}>
-        <Button 
-          variant="contained" 
+        <Button
+          variant="contained"
           color="primary"
           disabled={!selectedHour}
           onClick={handleReserve}
@@ -104,9 +104,9 @@ const HoursList = ({ hours, loading, error }) => {
         </Button>
       </Box>
 
-      <Snackbar 
-        open={showSnackbar} 
-        autoHideDuration={4000} 
+      <Snackbar
+        open={showSnackbar}
+        autoHideDuration={4000}
         onClose={handleCloseSnackbar}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >
