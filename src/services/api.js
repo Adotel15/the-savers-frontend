@@ -1,4 +1,4 @@
-const BASE_URL = 'https://kwlt3y0ac3.execute-api.us-east-1.amazonaws.com/Development/v1';
+const BASE_URL = 'https://apitest2.mango.com/uat-p-ai-services/api/v1';
 
 export const getRecommendedHours = async (storeId) => {
   try {

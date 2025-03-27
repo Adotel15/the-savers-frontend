@@ -27,7 +27,6 @@ function App() {
     setLoading(true);
     setError(null);
 
-    console.log('hello');
     try {
       const data = await getRecommendations(selectedProducts, purchaseHistory);
       setRecommendations(data);
